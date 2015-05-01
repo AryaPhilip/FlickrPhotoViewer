@@ -10,13 +10,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-/**
- * Created by shweta on 4/30/15.
- */
+/* Created by Shweta Philip
+*  Purpose: To retrieve images in the format of Bitmaps from specified URL
+* The images thus obtained from this class is directly displayed using ImageView on the second Activity
+*/
 public class DisplayImage extends AsyncTask<String, Void, Bitmap> {
 
     ImageView bmImage;
+    String TAG = "DisplayImage";
 
+    //Constructor for Display Image
     public DisplayImage(ImageView bmImage){
         this.bmImage = bmImage;
     }
@@ -24,21 +27,24 @@ public class DisplayImage extends AsyncTask<String, Void, Bitmap> {
     @Override
     protected Bitmap doInBackground(String... params) {
 
-            Entry entry = Data.EntryList.get(Data.itImage);
-            String urlDisplay = new String("https://farm" + entry.farm + ".staticflickr.com/" + entry.server + "/" + entry.id + "_" + entry.secret + ".jpg");
-            Bitmap image = null;
+        // Creates a new Entry class object and stores the detail of the photo obtained from the EntryList
+        // The itImage is the index of the photo that is selected by the user in the Second Activity
+        Entry entry = Data.EntryList.get(Data.itImage);
 
-            try {
-                InputStream in = new URL(urlDisplay).openStream();
+        // A String urlDisplay is created using the details obtained from the EntryList
+        String urlDisplay = new String("https://farm" + entry.farm + ".staticflickr.com/" + entry.server + "/" + entry.id + "_" + entry.secret + ".jpg");
+        Bitmap image = null;
+
+        // The corresponding image is retrieved from the url stored in image
+        try {
+            InputStream in = new URL(urlDisplay).openStream();
                 image = BitmapFactory.decodeStream(in);
-//                Data.bitmapList.add(mIcon);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            Log.v(TAG,"IO Exception");
+        }
 
         return image;
     }
-
 
     protected void onPostExecute(Bitmap result){
         bmImage.setImageBitmap(result);

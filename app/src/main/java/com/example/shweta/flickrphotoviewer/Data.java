@@ -1,16 +1,19 @@
 package com.example.shweta.flickrphotoviewer;
 
-import android.graphics.Bitmap;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by shweta on 4/29/15.
+/*
+ * Created by: Shweta Philip
+ * Purpose: Data has static attributes which store common data for
+ * both the activities and different classes in the package
  */
 public class Data {
 
-    public static int itImage = 0   ;
-    static List<Entry> EntryList = new ArrayList<>();
-    static List<Bitmap> bitmapList = new ArrayList<>();
+    // index obtained from the GUI, selected by the user. Used to retrieve the details of the right image.
+    // By default it is zero,hence it will always display first photo when application starts
+    public static int itImage = 0;
+
+    // An array list of class Entry, which stores all the data about photos obtained by using the FlickrAPI methods
+    public static List<Entry> EntryList = new ArrayList<>();
 }

@@ -17,21 +17,25 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-/**
- * Created by shweta on 4/30/15.
+/* Created by: Shweta Philip
+ * Purpose: This class uses the Flickr API method people.getPhotos
+ * to return details of the publically available photos
+ * in JSON format and stores the details in a List of Entry class
  */
+
 public class URLReader extends AsyncTask<String, Void, Void> {
 
 
-    String FlickrBaseURL = "https://api.flickr.com/services/rest/?";
-    String FlickrMethodUsed = "method=flickr.people.getPhotos";
-    String FlickrApiKey = "&api_key=19a62898cff39f6397da2d2079b06b77";
-    String FlickrUserId = "&user_id=commons";
-    String FlickrPrivacyFilter = "&privacy_filter=1";
-    String FlickrFormat = "&format=json";
-    String FlickrPerPage = "&per_page=500";
-    private final String ns = null;
-    String jsonText = null;
+    String FlickrBaseURL = "https://api.flickr.com/services/rest/?"; // The base Flickr URL used by the Flickr API
+    String FlickrMethodUsed = "method=flickr.people.getPhotos"; // The Flickr API method used to get photos
+    String FlickrApiKey = "&api_key=19a62898cff39f6397da2d2079b06b77"; // The application key obtained from the Flickr Website
+    String FlickrUserId = "&user_id=commons"; // The argument in the people.getPhotos method which specifies the user. In this case, it is commons: publically available images
+    String FlickrPrivacyFilter = "&privacy_filter=1"; // The argument in the people.getPhotos which specifies the privacy filter. privacy_filter = 1 is public
+    String FlickrFormat = "&format=json"; // The format in which the API returns the details of the photos
+    String FlickrPerPage = "&per_page=500"; // The number of photos whose details are mentioned per page
+    String jsonText = null; // The doInBackground function uses this string text to read from the URL which specifies the FlickrAPI method
+
+    String TAG = "URLReader class";
 
     private  String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -46,9 +50,7 @@ public class URLReader extends AsyncTask<String, Void, Void> {
     @Override
     protected Void doInBackground(String... params) {
 
-        String id = null;
-        String owner = null;
-        String url = new String(FlickrBaseURL+FlickrMethodUsed+FlickrApiKey+FlickrUserId+FlickrPrivacyFilter+FlickrFormat+FlickrPerPage);
+        String url = new String(FlickrBaseURL+FlickrMethodUsed+FlickrApiKey+FlickrUserId+FlickrPrivacyFilter+FlickrFormat+FlickrPerPage); // URL that specifies the FlickrAPI method
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(url);
         try {
@@ -58,12 +60,12 @@ public class URLReader extends AsyncTask<String, Void, Void> {
                 Reader in = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(in);
                 jsonText = readAll(bufferedReader);
-                jsonText = jsonText.substring(jsonText.indexOf("{"), jsonText.lastIndexOf("}") + 1);
+                jsonText = jsonText.substring(jsonText.indexOf("{"), jsonText.lastIndexOf("}") + 1); // Selects the string between 'jsonFlickrApi({' & '})' to make it easier to read JSON format
             }
         } catch (ClientProtocolException e) {
-            e.printStackTrace();
+            Log.d(TAG,"Client Protocol Exception");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG,"IO Exception");
         }
 
         try {
@@ -74,22 +76,17 @@ public class URLReader extends AsyncTask<String, Void, Void> {
 
                 JSONObject FlickrPhoto = JsonArray_photo.getJSONObject(i);
 
+                // Stores objects of Entry class in the Entry List extracted from the JSONObject obtained from the URL
+                // Each entry has 4 attributes: Farm, Server, Photo Id, Secret
                 Data.EntryList.add(new Entry(FlickrPhoto.getString("farm"), FlickrPhoto.getString("server"), FlickrPhoto.getString("id"), FlickrPhoto.getString("secret")));
             }
 
-            Log.v("Flickr_URLReader Do in Background", "size  " + Data.EntryList.size());
-//          OutputEntryList = EntryList;
-
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d(TAG,"JSON Exception");
         }
 
         return null;
     }
 
-
-//        protected void onPostExecute(){
-//
-//        }
 }
 

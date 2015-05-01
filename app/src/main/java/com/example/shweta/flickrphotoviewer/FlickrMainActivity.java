@@ -1,20 +1,22 @@
 package com.example.shweta.flickrphotoviewer;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 
-
+/*
+* Created by : Shweta Philip
+* Purpose: FlickrMainActivity represents the first page of the android application.
+* An introduction to the application.
+*/
 public class FlickrMainActivity extends ActionBarActivity {
 
+    //Start App button
     Button button;
 
     String TAG = "MainActivity";
@@ -24,9 +26,15 @@ public class FlickrMainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flickr_main);
+        //urlr is an object of the class URLReader
+        //This class uses the Flickr API method people.getPhotos
+        // to return details of the publically available photos
+        // in JSON format and stores the details in a List of Entry class
+
         URLReader urlr = new URLReader();
         urlr.execute();
 
+        // Start App Button
         addListenerOnButton();
     }
 
@@ -52,19 +60,20 @@ public class FlickrMainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Creates an Intent which links the two acitivity classes FlickrMainActivity and SecondActivity
+    //When this button is selected the user is directed to a different page in the app where the user
+    //can select photo ids from the list and the app displays the image.
     public void addListenerOnButton() {
 
+        Log.v(TAG, "Start App button clicked");
         button = (Button) findViewById(R.id.button);
 
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                Log.v(TAG, "Size " + Data.EntryList.size());
                 Intent i = new Intent(FlickrMainActivity.this, SecondActivity.class);
                 startActivity(i);
-
-
             }
         });
     }
